@@ -1,1 +1,7 @@
-prueba
+tensorflow==2.14.0
+pillow
+numpy
+matplotlib
+streamlit
+opencv-python
+tqdm 
