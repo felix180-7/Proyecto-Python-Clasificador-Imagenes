@@ -6,10 +6,9 @@ from tensorflow.keras.preprocessing import image
 
 IMG_SIZE = 128
 
-
 class ConectorIA:
     def __init__(self,
-                 ruta_modelo="models/modelo_final",
+                 ruta_modelo="models/modelo_final.keras",
                  ruta_clases="models/class_names.json"):
 
         self.ruta_modelo = Path(ruta_modelo)
