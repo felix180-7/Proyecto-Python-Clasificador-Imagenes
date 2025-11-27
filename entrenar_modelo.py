@@ -1,16 +1,3 @@
-"""
-train_cnn.py
-Entrena una red neuronal que reconoce banderas europeas.
-
-USO:
-    python train_cnn.py
-
-Requisitos:
-- Tener las imágenes en data/train/<pais>
-- Tener 10 imágenes por país
-- Haber instalado: tensorflow, pillow, numpy, matplotlib
-"""
-
 import json
 from pathlib import Path
 import tensorflow as tf
@@ -18,12 +5,11 @@ from tensorflow.keras import layers, models
 import matplotlib.pyplot as plt
 
 # -------------------------------------
-# CONFIGURACIÓN BÁSICA (NO TOCAR)
+# CONFIGURACIÓN BÁSICA
 # -------------------------------------
-
-IMG_SIZE = 128               # Tamaño al que reducimos las imágenes
+IMG_SIZE = 128
 BATCH_SIZE = 16
-EPOCHS = 40                  # Cuántas vueltas da la IA para aprender
+EPOCHS = 40
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "datos" / "entrenamiento"
@@ -31,9 +17,8 @@ MODELS_DIR = BASE_DIR / "models"
 MODELS_DIR.mkdir(exist_ok=True)
 
 # -------------------------------------
-# CARGA DE IMÁGENES DESDE CARPETAS
+# CARGA DE IMÁGENES
 # -------------------------------------
-
 print("🔄 Cargando imágenes desde:", DATA_DIR)
 
 train_ds = tf.keras.preprocessing.image_dataset_from_directory(
@@ -66,28 +51,23 @@ num_classes = len(class_names)
 print("🟩 Países detectados:", class_names)
 print("Total países:", num_classes)
 
-# Aceleramos el entrenamiento un poquito
+# Prefetch para acelerar entrenamiento
 AUTOTUNE = tf.data.AUTOTUNE
 train_ds = train_ds.prefetch(AUTOTUNE)
 val_ds = val_ds.prefetch(AUTOTUNE)
 
 # -------------------------------------
-# CREAMOS LA RED NEURONAL (CNN)
+# CREACIÓN DE LA CNN
 # -------------------------------------
-
 def crear_modelo():
     modelo = models.Sequential([
         layers.Rescaling(1./255, input_shape=(IMG_SIZE, IMG_SIZE, 3)),
-
         layers.Conv2D(32, (3,3), activation="relu"),
         layers.MaxPooling2D(),
-
         layers.Conv2D(64, (3,3), activation="relu"),
         layers.MaxPooling2D(),
-
         layers.Conv2D(128, (3,3), activation="relu"),
         layers.MaxPooling2D(),
-
         layers.Flatten(),
         layers.Dense(128, activation="relu"),
         layers.Dropout(0.4),
@@ -108,7 +88,6 @@ model.summary()
 # -------------------------------------
 # ENTRENAR EL MODELO
 # -------------------------------------
-
 print("🚀 Entrenando la IA...")
 
 hist = model.fit(
@@ -122,9 +101,8 @@ print("✔ Entrenamiento terminado")
 # -------------------------------------
 # GUARDAR MODELO Y CLASES
 # -------------------------------------
-
-model.save(MODELS_DIR / "modelo_final")
-print("💾 Modelo guardado en /models/modelo_final")
+model.save(MODELS_DIR / "modelo_final.keras")  # <- extensión corregida
+print("💾 Modelo guardado en /models/modelo_final.keras")
 
 with open(MODELS_DIR / "class_names.json", "w", encoding="utf-8") as f:
     json.dump(class_names, f, indent=2, ensure_ascii=False)
@@ -132,9 +110,8 @@ with open(MODELS_DIR / "class_names.json", "w", encoding="utf-8") as f:
 print("📚 class_names.json guardado")
 
 # -------------------------------------
-# GUARDAR GRÁFICA DE ENTRENAMIENTO
+# GRAFICA DE ENTRENAMIENTO
 # -------------------------------------
-
 plt.figure(figsize=(10,4))
 
 plt.subplot(1,2,1)
